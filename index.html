@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Girl Voice Changer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background: #1a1a1a; color: white; padding: 50px 20px; }
+        h1 { color: #ff4081; }
+        .status { margin: 20px; font-size: 1.2rem; color: #4caf50; }
+        .btn { background: #ff4081; border: none; color: white; padding: 20px 40px; font-size: 1.5rem; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4); transition: 0.3s; }
+        .btn:active { transform: scale(0.95); }
+        .btn:disabled { background: #555; cursor: not-allowed; }
+        p { color: #aaa; margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+    <h1>Girl Voice Live 🎤</h1>
+    <div id="status" class="status">Click "Start" to Begin</div>
+    
+    <button id="startBtn" class="btn">Start Live Voice</button>
+    <button id="stopBtn" class="btn" style="background:#444; margin-left:10px;" disabled>Stop</button>
+
+    <p>Note: Earphones use karein taaki echo na aaye.</p>
+
+    <script>
+        let mic, pitchShift;
+
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const statusDiv = document.getElementById('status');
+
+        startBtn.onclick = async () => {
+            await Tone.start(); // Audio context start karne ke liye
+            
+            mic = new Tone.UserMedia();
+            // Pitch 7 ya 8 ladki ki awaaz ke liye best hai
+            pitchShift = new Tone.PitchShift(7).toDestination();
+
+            try {
+                await mic.open();
+                mic.connect(pitchShift);
+                
+                statusDiv.innerText = "🔴 Live: Girl Voice Active!";
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+            } catch (e) {
+                alert("Mic permission denied!");
+                console.error(e);
+            }
+        };
+
+        stopBtn.onclick = () => {
+            mic.close();
+            statusDiv.innerText = "Stopped. Click Start again.";
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+        };
+    </script>
+</body>
+</html>
