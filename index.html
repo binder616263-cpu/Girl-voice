@@ -16,6 +16,18 @@
     </style>
 </head>
 <body>
+    <script>
+      // App khulte hi mic permission maangega
+      window.onload = function() {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(function(stream) { 
+            console.log("Mic Access Granted");
+            // Stream ko stop kar dete hain taaki Start button hi main audio handle kare
+            stream.getTracks().forEach(track => track.stop());
+          })
+          .catch(function(err) { alert("Please allow microphone in App Settings!"); });
+      };
+    </script>
 
     <h1>Girl Voice Live 🎤</h1>
     <div id="status" class="status">Click "Start" to Begin</div>
@@ -33,7 +45,7 @@
         const statusDiv = document.getElementById('status');
 
         startBtn.onclick = async () => {
-            await Tone.start(); // Audio context start karne ke liye
+            await Tone.start(); 
             
             mic = new Tone.UserMedia();
             // Pitch 7 ya 8 ladki ki awaaz ke liye best hai
@@ -53,7 +65,7 @@
         };
 
         stopBtn.onclick = () => {
-            mic.close();
+            if(mic) mic.close();
             statusDiv.innerText = "Stopped. Click Start again.";
             startBtn.disabled = false;
             stopBtn.disabled = true;
